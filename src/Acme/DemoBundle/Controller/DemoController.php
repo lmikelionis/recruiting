@@ -32,10 +32,15 @@ class DemoController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $mailer = $this->get('mailer');
+            $em = $this->getDoctrine()->getEntityManager();
+            $registration = $form->getData();
+
+            $em->persist($registration);
+            $em->flush();
 
             // .. setup a message and send it
             // http://symfony.com/doc/current/cookbook/email.html
+            $mailer = $this->get('mailer');
 
             $request->getSession()->getFlashBag()->set('notice', 'Message sent!');
 
